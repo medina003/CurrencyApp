@@ -8,9 +8,7 @@ namespace MyConverter.Services
         public async Task<ValCurs> GetConverterInfoAsync()
         {
             DateTime dateTime = DateTime.Now;
-
             string shortDate = dateTime.ToString("dd.MM.yyyy");
-
             HttpClient client = new();
             HttpResponseMessage message = await client.GetAsync($"https://www.cbar.az/currencies/{shortDate}.xml");
             if (message.IsSuccessStatusCode)

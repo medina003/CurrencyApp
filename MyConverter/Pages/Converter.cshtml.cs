@@ -9,20 +9,16 @@ namespace MyConverter.Pages
 {
     public class ConverterModel : PageModel
     {
+        [BindProperty(Name = "userInput")]
+        [RegularExpression(@"^\d+(\.\d+)?$", ErrorMessage = "Please enter a valid decimal or integer value.")]   
+        [Required(ErrorMessage = "Please enter a value.")]
+        public string UserInput { get; set; }
+        [BindProperty]
+        public string CurrencySelection { get; set; } 
         [BindProperty]
         public string Result { get; set; }
-
-        [BindProperty(Name = "userInput")]
-        [Required(ErrorMessage = "Please enter a value.")]
-        [RegularExpression(@"^\d+(\.\d+)?$", ErrorMessage = "Please enter a valid decimal or integer value.")]
-        public string UserInput { get; set; }
-
-        [BindProperty]
-        public string CurrencySelectionRight { get; set; }
-
         public ValCurs Response { get; set; } = new();
         private ConverterService _converterService;
-
         public ConverterModel(ConverterService converterService)
         {
             _converterService = converterService;
@@ -33,7 +29,6 @@ namespace MyConverter.Pages
             try
             {
                 Response = await _converterService.GetConverterInfoAsync();
-
             }
             catch (Exception)
             {
@@ -48,15 +43,15 @@ namespace MyConverter.Pages
             Response = await _converterService.GetConverterInfoAsync();
             if (double.TryParse(UserInput, out double userInputValue))
             {
-                double resultValue = ConvertCurrency(userInputValue, CurrencySelectionRight);
+                double resultValue = ConvertCurrency(userInputValue, CurrencySelection);
                 Result = resultValue.ToString();
             }
             return Page();
         }
         private double ConvertCurrency(double value, string toCurrency)
-        {
+        {  
+            double toCurrencyResult;
             string toCurrencyValue = String.Empty;
-
             for (int i = 0; i < Response.ValTypes.Count; i++)
             {
                 for (int j = 0; j < Response.ValTypes[i].Valutes.Count; j++)
@@ -67,7 +62,6 @@ namespace MyConverter.Pages
                     }
                 }
             }
-            double toCurrencyResult;
             Double.TryParse(toCurrencyValue, NumberStyles.Float, CultureInfo.InvariantCulture, out toCurrencyResult);
             if (toCurrencyResult > 1)
             {

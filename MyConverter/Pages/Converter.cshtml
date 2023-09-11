@@ -4,34 +4,28 @@
     ViewData["Title"] = "Converter";
 }
 
-
 @if (@Model.Response != null)
 {
     @if (@Model.Response.Date != null)
     {
-        <span>
-            <h1 id="date">Date: @Model.Response.Date</h1>
-        </span>
+            <h1>Date: @Model.Response.Date</h1>
     }
     @if (@Model.Response.ValTypes != null)
     {
-        <form class="myContainer" method="post" asp-page-handler="OnPost">
-            <div class="formLeft">
+        <form method="post" asp-page-handler="OnPost">
                 <h2>From currency AZN</h2>
-                <div class="form-group">
-                    <input class="form-control currencyValue" name="userInput" id="userInput" placeholder="Enter sum">
+                <div>
+                    <input class="form-control" name="userInput"  placeholder="Enter sum">
                     <span class="text-danger" asp-validation-for="UserInput"></span>
-                    <button type="submit" id="convertButton" class="btn btn-dark">Convert</button>
+                    <button type="submit"  class="btn btn-outline-info">Convert</button>
                 </div>
-            </div>
-            <div class="formRight">
                 <h2>To currency</h2>
-                <div class="form-group">
+                <div>
                     @for (int i = 0; i < Model.Response.ValTypes.Count; i++)
                     {
                         @if (@Model.Response.ValTypes[i].Type == "Xarici valyutalar")
                         {
-                            <select id="currencySelectionRight" asp-for="CurrencySelectionRight" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                            <select  asp-for="CurrencySelection" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
                                 @for (int j = 0; j < Model.Response.ValTypes[i].Valutes.Count; j++)
                                 {
                                     <option>@Model.Response.ValTypes[i].Valutes[j].Code</option>
@@ -40,9 +34,8 @@
                         }
 
                     }
-                    <input readonly class="form-control currencyValue" name="result" id="result" value=@Model.Result />
+                <input class="form-control" readonly name="result" value=@Model.Result />
                 </div>
-            </div>
         </form>
     }
 }
